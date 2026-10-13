@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบจองอาคารสถานที่ โรงเรียนแม่จันวิทยาคม</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'TH Sarabun PSK';
+            src: url('https://fonts.gstatic.com/s/sarabun/v13/DtVmJx26TKEr37c9YK5sulUl.woff2') format('woff2');
+        }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Prompt', 'sans-serif'] },
+                    colors: {
+                        primary: '#0F8B5F', /* Forest Green */
+                        dark: '#0B5E3F',
+                        light: '#EAF8F0',
+                        accent: '#39C16C',
+                        bg: '#F0F7F4'
+                    }
+                }
+            }
+        }
+    </script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.6/babel.min.js"></script>
+
+    <style>
+        body {
+            background-color: #F0F7F4;
+            background-image: 
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1440' height='900' viewBox='0 0 1440 900'%3E%3Cdefs%3E%3ClinearGradient id='sky' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%23d4edda'/%3E%3Cstop offset='100%25' stop-color='%23f0f7f4'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1440' height='900' fill='url(%23sky)'/%3E%3C!-- Mountains --%3E%3Cellipse cx='300' cy='700' rx='320' ry='220' fill='%23a8d5b5' opacity='0.35'/%3E%3Cellipse cx='800' cy='720' rx='400' ry='260' fill='%2388c9a0' opacity='0.3'/%3E%3Cellipse cx='1200' cy='690' rx='350' ry='230' fill='%239dd4ae' opacity='0.32'/%3E%3C!-- Trees left --%3E%3Crect x='60' y='600' width='18' height='80' fill='%23556b2f' opacity='0.4'/%3E%3Cellipse cx='69' cy='590' rx='28' ry='38' fill='%23228b22' opacity='0.4'/%3E%3Crect x='110' y='620' width='14' height='65' fill='%23556b2f' opacity='0.35'/%3E%3Cellipse cx='117' cy='612' rx='22' ry='30' fill='%2332a852' opacity='0.38'/%3E%3Crect x='20' y='630' width='12' height='55' fill='%23556b2f' opacity='0.3'/%3E%3Cellipse cx='26' cy='624' rx='19' ry='26' fill='%2339c16c' opacity='0.32'/%3E%3C!-- Trees right --%3E%3Crect x='1350' y='610' width='18' height='75' fill='%23556b2f' opacity='0.4'/%3E%3Cellipse cx='1359' cy='600' rx='28' ry='38' fill='%23228b22' opacity='0.4'/%3E%3Crect x='1390' y='635' width='14' height='58' fill='%23556b2f' opacity='0.35'/%3E%3Cellipse cx='1397' cy='627' rx='22' ry='30' fill='%2332a852' opacity='0.35'/%3E%3Crect x='1300' y='645' width='12' height='48' fill='%23556b2f' opacity='0.3'/%3E%3Cellipse cx='1306' cy='639' rx='18' ry='24' fill='%2339c16c' opacity='0.3'/%3E%3C!-- Foreground grass --%3E%3Cellipse cx='720' cy='920' rx='900' ry='120' fill='%2388c97a' opacity='0.18'/%3E%3C!-- Birds --%3E%3Cpath d='M400 180 Q410 170 420 180' stroke='%23228b22' stroke-width='2' fill='none' opacity='0.3'/%3E%3Cpath d='M430 165 Q440 155 450 165' stroke='%23228b22' stroke-width='2' fill='none' opacity='0.25'/%3E%3Cpath d='M900 140 Q912 130 924 140' stroke='%230B5E3F' stroke-width='2' fill='none' opacity='0.2'/%3E%3C/svg%3E");
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center bottom;
+        }
+        @media print {
+            body { background: white; }
+            @page { margin: 0; size: A4 portrait; }
+            .print\:hidden { display: none !important; }
+        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        .pdf-font {
+            font-family: 'Sarabun', 'TH Sarabun PSK', serif !important;
+            font-size: 16px !important;
+        }
+        .pdf-font * {
+            font-family: 'Sarabun', 'TH Sarabun PSK', serif !important;
+        }
+        .glass-card {
+            background: rgba(255,255,255,0.88);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255,255,255,0.6);
+        }
+        .sidebar-glass {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .cal-day { min-height: 64px; }
+        .cal-event { font-size: 10px; line-height: 1.2; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel" data-presets="react,env">
+        const { useState, useEffect } = React;
+
+        class ErrorBoundary extends React.Component {
+            constructor(props) { super(props); this.state = { hasError: false, error: null }; }
+            static getDerivedStateFromError(error) { return { hasError: true, error }; }
+            render() {
+                if (this.state.hasError) return (
+                    <div className="min-h-screen flex items-center justify-center bg-red-50 p-4">
+                        <div className="bg-white p-8 rounded-2xl shadow-lg border border-red-200 max-w-2xl w-full">
+                            <h1 className="text-2xl font-bold text-red-600 mb-4">⚠️ พบข้อผิดพลาดในการแสดงผลระบบ</h1>
+                            <pre className="bg-gray-100 p-4 rounded-lg overflow-x-auto text-sm text-red-500 whitespace-pre-wrap">{this.state.error && this.state.error.toString()}</pre>
+                        </div>
+                    </div>
+                );
+                return this.props.children;
+            }
+        }
+
+        const Icon = ({ d, size = 24, className = "", color = "currentColor", children }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                {d ? <path d={d} /> : children}
+            </svg>
+        );
+        const Building = (p) => <Icon {...p}><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><path d="M9 22v-4h6v4M8 6h.01M16 6h.01M12 6h.01M12 10h.01M12 14h.01M16 10h.01M16 14h.01M8 10h.01M8 14h.01"/></Icon>;
+        const User = (p) => <Icon {...p}><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></Icon>;
+        const Lock = (p) => <Icon {...p}><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></Icon>;
+        const ShieldCheck = (p) => <Icon {...p}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></Icon>;
+        const ChevronLeft = (p) => <Icon {...p}><path d="m15 18-6-6 6-6"/></Icon>;
+        const ChevronRight = (p) => <Icon {...p}><path d="m9 18 6-6-6-6"/></Icon>;
+        const Home = (p) => <Icon {...p}><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></Icon>;
+        const PenTool = (p) => <Icon {...p}><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></Icon>;
+        const FileText = (p) => <Icon {...p}><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></Icon>;
+        const CalendarIcon = (p) => <Icon {...p}><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></Icon>;
+        const CheckCircle = (p) => <Icon {...p}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></Icon>;
+        const Clock = (p) => <Icon {...p}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></Icon>;
+        const Printer = (p) => <Icon {...p}><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></Icon>;
+        const MenuIcon = (p) => <Icon {...p}><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></Icon>;
+        const XIcon = (p) => <Icon {...p}><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></Icon>;
+        const XCircle = (p) => <Icon {...p}><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></Icon>;
+        const Trash2 = (p) => <Icon {...p}><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></Icon>;
+        const AlertTriangle = (p) => <Icon {...p}><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></Icon>;
+        const Loader = (p) => <Icon {...p} className={`animate-spin ${p.className||''}`}><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></Icon>;
+        const BarChart2 = (p) => <Icon {...p}><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></Icon>;
+        const Download = (p) => <Icon {...p}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></Icon>;
+
+        const initialBookings = [];
+
+        const thaiDate = (dateString) => {
+            if (!dateString) return '';
+            const months = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+            const date = new Date(dateString + 'T00:00:00');
+            return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear() + 543}`;
+        };
+
+        const generateId = () => {
+            const num = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+            return `BK-${new Date().getFullYear()}-${num}`;
+        };
+
+        const StatusBadge = ({ status }) => {
+            const styles = { pending: "bg-yellow-100 text-yellow-700 border-yellow-200", approved: "bg-green-100 text-green-700 border-green-200", rejected: "bg-red-100 text-red-700 border-red-200" };
+            const text = { pending: "กำลังพิจารณา", approved: "อนุมัติ", rejected: "ไม่อนุมัติ" };
+            return <span className={`px-3 py-1 rounded-full text-xs font-medium border ${styles[status]}`}>{text[status]}</span>;
+        };
+
+        const DashboardCard = ({ title, count, icon: IconCard, colorClass }) => (
+            <div className="glass-card p-5 rounded-2xl shadow-sm flex items-center justify-between hover:shadow-md transition-shadow">
+                <div>
+                    <p className="text-gray-500 text-sm font-medium mb-1">{title}</p>
+                    <h3 className="text-3xl font-bold text-gray-800">{count}</h3>
+                </div>
+                <div className={`p-4 rounded-xl ${colorClass}`}><IconCard size={24} /></div>
+            </div>
+        );
+
+        const BookingCalendar = ({ bookings }) => {
+            const today = new Date();
+            const [viewYear, setViewYear] = useState(today.getFullYear());
+            const [viewMonth, setViewMonth] = useState(today.getMonth());
+            const [popupEvent, setPopupEvent] = useState(null);
+
+            const thaiMonths = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+            const dayLabels = ['อา','จ','อ','พ','พฤ','ศ','ส'];
+
+            const firstDay = new Date(viewYear, viewMonth, 1).getDay();
+            const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+
+            // ดึงข้อมูลทั้ง "อนุมัติแล้ว" และ "รอพิจารณา" (ซ่อนสถานะไม่อนุมัติ/ยกเลิก)
+            const visibleBookings = bookings.filter(b => b.status === 'approved' || b.status === 'pending');
+
+            const getBookingsForDay = (day) => {
+                const dateStr = `${viewYear}-${String(viewMonth + 1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+                return visibleBookings.filter(b => b.date === dateStr);
+            };
+
+            const prevMonth = () => {
+                if (viewMonth === 0) { setViewMonth(11); setViewYear(y => y - 1); }
+                else setViewMonth(m => m - 1);
+            };
+            const nextMonth = () => {
+                if (viewMonth === 11) { setViewMonth(0); setViewYear(y => y + 1); }
+                else setViewMonth(m => m + 1);
+            };
+
+            const isToday = (day) => today.getDate() === day && today.getMonth() === viewMonth && today.getFullYear() === viewYear;
+
+            const cells = [];
+            for (let i = 0; i < firstDay; i++) cells.push(null);
+            for (let d = 1; d <= daysInMonth; d++) cells.push(d);
+
+            return (
+                <div className="glass-card rounded-2xl shadow-sm p-5 relative">
+                    {/* Modal Popup แสดงรายละเอียดกิจกรรมเมื่อคลิก */}
+                    {popupEvent && (
+                        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+                            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setPopupEvent(null)}></div>
+                            <div className="relative bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl z-10 border border-gray-100">
+                                <div className="flex justify-between items-start mb-4 border-b pb-3">
+                                    <h3 className="text-xl font-bold text-primary flex items-center gap-2">
+                                        <CalendarIcon size={24}/> ข้อมูลการจอง
+                                    </h3>
+                                    <button onClick={() => setPopupEvent(null)} className="text-gray-400 hover:text-red-500 transition-colors bg-gray-100 rounded-full p-1"><XIcon size={20}/></button>
+                                </div>
+                                <div className="space-y-4 text-sm text-gray-700">
+                                    <div><span className="font-bold text-gray-500 block text-xs mb-1">สถานะคำขอ</span><StatusBadge status={popupEvent.status}/></div>
+                                    <div><span className="font-bold text-gray-500 block text-xs mb-1">อาคารสถานที่</span><span className="font-semibold text-lg text-gray-900">{popupEvent.building}</span></div>
+                                    <div><span className="font-bold text-gray-500 block text-xs mb-1">วัตถุประสงค์</span>{popupEvent.purpose}</div>
+                                    <div><span className="font-bold text-gray-500 block text-xs mb-1">วันและเวลา</span>{thaiDate(popupEvent.date)} <br/>เวลา {popupEvent.startTime} - {popupEvent.endTime} น.</div>
+                                    <div><span className="font-bold text-gray-500 block text-xs mb-1">ผู้ขอใช้สถานที่</span>{popupEvent.name} {popupEvent.lastName} <br/><span className="text-xs text-gray-500">({popupEvent.department})</span></div>
+                                    <div><span className="font-bold text-gray-500 block text-xs mb-1">จำนวนผู้เข้าร่วม</span>ประมาณ {popupEvent.participants} คน</div>
+                                </div>
+                                <button onClick={() => setPopupEvent(null)} className="mt-6 w-full bg-gray-100 hover:bg-gray-200 text-gray-800 py-2.5 rounded-xl transition font-medium">ปิดหน้าต่าง</button>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Header */}
+                    <div className="flex flex-col md:flex-row items-center justify-between mb-4 gap-3">
+                        <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+                            <span className="text-primary"><CalendarIcon size={22}/></span>
+                            ปฏิทินการจองอาคารสถานที่
+                        </h3>
+                        <div className="flex items-center gap-2 bg-white/50 p-1 rounded-xl shadow-sm border border-gray-100">
+                            <button onClick={prevMonth} className="p-1.5 rounded-lg hover:bg-light text-primary transition-colors"><ChevronLeft size={18}/></button>
+                            <span className="text-sm font-semibold text-gray-700 w-36 text-center">{thaiMonths[viewMonth]} {viewYear + 543}</span>
+                            <button onClick={nextMonth} className="p-1.5 rounded-lg hover:bg-light text-primary transition-colors"><ChevronRight size={18}/></button>
+                        </div>
+                    </div>
+
+                    {/* Legend (อธิบายความหมายของสี) */}
+                    <div className="flex flex-wrap gap-5 mb-4 p-3 bg-gray-50 rounded-xl border border-gray-100">
+                        <span className="flex items-center gap-2 text-sm text-gray-700 font-medium">
+                            <span className="inline-block w-4 h-4 rounded-md bg-emerald-500 shadow-sm"></span> อนุมัติแล้ว
+                        </span>
+                        <span className="flex items-center gap-2 text-sm text-gray-700 font-medium">
+                            <span className="inline-block w-4 h-4 rounded-md bg-amber-400 shadow-sm"></span> รอพิจารณา/รออนุมัติ
+                        </span>
+                    </div>
+
+                    {/* Day labels */}
+                    <div className="grid grid-cols-7 mb-1">
+                        {dayLabels.map((d, i) => (
+                            <div key={i} className={`text-center text-xs font-semibold py-1 ${i === 0 ? 'text-red-500' : i === 6 ? 'text-blue-500' : 'text-gray-500'}`}>{d}</div>
+                        ))}
+                    </div>
+
+                    {/* Grid */}
+                    <div className="grid grid-cols-7 gap-1">
+                        {cells.map((day, idx) => {
+                            if (!day) return <div key={`empty-${idx}`} className="cal-day rounded-lg bg-gray-50/40 p-1"></div>;
+                            const dayBookings = getBookingsForDay(day);
+                            const col = idx % 7;
+                            const isSun = col === 0;
+                            const isSat = col === 6;
+                            return (
+                                <div key={day} className={`cal-day rounded-lg p-1.5 border transition-all ${isToday(day) ? 'bg-primary/5 border-primary shadow-sm' : 'bg-white/80 border-transparent hover:border-gray-200'}`}>
+                                    <div className={`text-xs font-bold mb-1 text-right ${isToday(day) ? 'text-primary' : isSun ? 'text-red-500' : isSat ? 'text-blue-500' : 'text-gray-600'}`}>{day}</div>
+                                    <div className="space-y-1 overflow-hidden">
+                                        {dayBookings.slice(0, 3).map((b, i) => {
+                                            // กำหนดสีตามสถานะ: อนุมัติ = สีเขียว, รอพิจารณา = สีเหลือง
+                                            const bgClass = b.status === 'approved' ? 'bg-emerald-500 text-white' : 'bg-amber-400 text-amber-900';
+                                            
+                                            return (
+                                                <div key={i} onClick={() => setPopupEvent(b)} className={`cal-event cursor-pointer hover:opacity-80 shadow-sm ${bgClass} rounded px-1.5 py-0.5 truncate font-medium`} title={`คลิกเพื่อดู: ${b.building} (${b.status === 'approved' ? 'อนุมัติแล้ว' : 'รอพิจารณา'})`}>
+                                                    {b.building.length > 8 ? b.building.slice(0,7)+'…' : b.building}
+                                                </div>
+                                            );
+                                        })}
+                                        {dayBookings.length > 3 && (
+                                            <div className="cal-event text-gray-500 px-1 font-medium text-center bg-gray-100 rounded">+{dayBookings.length - 3} เพิ่มเติม</div>
+                                        )}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            );
+        };
+
+        const PreviewScreen = ({ booking, onBack }) => (
+            <div>
+                <div className="flex justify-between items-center mb-4 print:hidden">
+                    <button onClick={onBack} className="flex items-center gap-2 text-gray-600 hover:text-primary glass-card px-4 py-2 rounded-lg shadow-sm font-medium">
+                        <ChevronLeft size={20} /> ย้อนกลับ
+                    </button>
+                    <button onClick={() => window.print()} className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg hover:bg-dark shadow-md font-medium transition-colors">
+                        <Printer size={20} /> พิมพ์ / บันทึก PDF
+                    </button>
+                </div>
+                {/* PDF Container - กำหนดขนาด A4 แนวตั้ง */}
+                <div className="bg-white mx-auto p-12 shadow-2xl print:shadow-none max-w-[794px] min-h-[1123px] text-black print:m-0 print:p-8 pdf-font relative" id="pdf-document">
+                    <h1 className="text-2xl font-bold text-center mb-8 mt-4">บันทึกข้อความ</h1>
+                    <div className="space-y-3">
+                        <div className="flex gap-4"><span className="font-bold w-24">ส่วนราชการ</span><span className="flex-1 border-b border-dotted border-black">โรงเรียนแม่จันวิทยาคม</span></div>
+                        <div className="flex gap-4">
+                            <div className="flex-1 flex gap-2"><span className="font-bold w-12">ที่</span><span className="flex-1 border-b border-dotted border-black"></span></div>
+                            <div className="flex-1 flex gap-2"><span className="font-bold w-16">วันที่</span><span className="flex-1 border-b border-dotted border-black">{thaiDate(booking.requestDate)}</span></div>
+                        </div>
+                        <div className="flex gap-4"><span className="font-bold w-24">เรื่อง</span><span className="flex-1 border-b border-dotted border-black">ขออนุญาตใช้อาคารสถานที่และอุปกรณ์</span></div>
+                        <div className="flex gap-4 mt-6"><span className="font-bold w-24">เรียน</span><span>รองผู้อำนวยการฝ่ายบริหารทั่วไป</span></div>
+                        
+                        <div className="mt-8 leading-8 indent-16 text-justify">
+                            ด้วยข้าพเจ้า {booking.name} {booking.lastName} กลุ่มสาระการเรียนรู้/ฝ่ายงาน {booking.department || '-'} หมายเลขโทรศัพท์ {booking.phone}{' '}
+                            มีความประสงค์ขออนุญาตใช้อาคาร/สถานที่ คือ <span className="font-bold">{booking.building}</span> เพื่อวัตถุประสงค์ในการ {booking.purpose}
+                            โดยมีผู้เข้าร่วมกิจกรรมจำนวนประมาณ {booking.participants} คน ในวันที่ {thaiDate(booking.date)} ตั้งแต่เวลา {booking.startTime} น. ถึง {booking.endTime} น.
+                        </div>
+                        
+                        <div className="mt-2 leading-8">
+                            <span className="font-bold underline">รายละเอียดเพิ่มเติม:</span><br/>
+                            1. รูปแบบการจัดสถานที่: {booking.setupType === 'admin' ? 'ต้องการให้ฝ่ายบริหารทั่วไปจัดให้' : 'ดำเนินการจัดสถานที่ด้วยตนเอง'}<br/>
+                            {booking.setupType === 'admin' && booking.layoutLink && (
+                                <span className="ml-4 break-all">ลิงก์ผังการจัดงาน: <span className="text-gray-600 underline">{booking.layoutLink}</span><br/></span>
+                            )}
+                            2. อุปกรณ์ที่ต้องการ: {booking.equipmentDetails || 'ไม่มี'}
+                        </div>
+                        
+                        <div className="mt-4 leading-8">จึงเรียนมาเพื่อโปรดพิจารณาอนุมัติ</div>
+                        
+                        <div className="mt-12 flex justify-end">
+                            <div className="text-center w-64">
+                                <p className="mb-2 text-lg font-bold">(ลงชื่อ) {booking.name}  {booking.lastName}</p>
+                                <p className="mb-2">({booking.name} {booking.lastName})</p>
+                                <p>ผู้ขออนุญาต</p>
+                            </div>
+                        </div>
+                        
+                        <div className="mt-12 border-t-2 border-black pt-8">
+                            <h3 className="font-bold mb-6 text-center">ความเห็น / การอนุมัติ (งานอาคารสถานที่)</h3>
+                            <div className="grid grid-cols-2 gap-8">
+                                <div className="text-center">
+                                    <div className="flex justify-center gap-4 mb-8">
+                                        <label className="flex items-center gap-1"><input type="radio" checked={false} readOnly className="w-4 h-4"/> เห็นควรอนุมัติ</label>
+                                        <label className="flex items-center gap-1"><input type="radio" checked={false} readOnly className="w-4 h-4"/> ไม่อนุมัติ</label>
+                                    </div>
+                                    <p className="mb-4">(ลงชื่อ).......................................................</p>
+                                    <p className="mb-2">(.......................................................)</p>
+                                    <p>หัวหน้าอาคารสถานที่</p>
+                                </div>
+                                <div className="text-center">
+                                    <div className="flex justify-center gap-4 mb-8">
+                                        <label className="flex items-center gap-1"><input type="radio" checked={booking.status === 'approved'} readOnly className="w-4 h-4"/> อนุมัติ</label>
+                                        <label className="flex items-center gap-1"><input type="radio" checked={booking.status === 'rejected'} readOnly className="w-4 h-4"/> ไม่อนุมัติ</label>
+                                    </div>
+                                    <p className="mb-4">(ลงชื่อ).......................................................</p>
+                                    <p className="mb-2">(.......................................................)</p>
+                                    <p>รองผู้อำนวยการฝ่ายบริหารทั่วไป</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+
+        const BookingForm = ({ onSubmit }) => {
+            const [formData, setFormData] = useState({
+                name:'', lastName:'', department:'', phone:'', email:'', building: [], otherBuilding:'', purpose:'',
+                date:'', startTime:'', endTime:'', participants:'', equipmentDetails:'',
+                setupType:'self', layoutLink:'', acceptTerms: false
+            });
+            const buildingsList = [
+                { name:'หอประชุมชงโค', capacity:'300-400 คน' },
+                { name:'ห้องพิพิธภัณฑ์', capacity:'10-30 คน' },
+                { name:'ห้องทูบีนัมเบอร์วัน', capacity:'30-50 คน' },
+                { name:'สนามฟุตบอล', capacity:'500-1000 คน' },
+                { name:'โดมอเนกประสงค์', capacity:'1000-1500 คน' },
+                { name:'ห้องประชุม DLC', capacity:'130 คน' },
+                { name:'ห้องศูนย์วิทยาศาสตร์พลังสิบ', capacity:'10-40 คน' },
+                { name:'อื่นๆ', capacity:'ระบุเอง' }
+            ];
+
+            const handleChange = (e) => setFormData({...formData, [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value});
+            
+            const handleBuildingToggle = (e) => {
+                const { value, checked } = e.target;
+                setFormData(prev => {
+                    let newBuildings = [...prev.building];
+                    if (checked) newBuildings.push(value);
+                    else newBuildings = newBuildings.filter(b => b !== value);
+                    return { ...prev, building: newBuildings };
+                });
+            };
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (formData.building.length === 0) {
+                    alert("กรุณาเลือกอาคารสถานที่อย่างน้อย 1 แห่ง");
+                    return;
+                }
+                if (!formData.acceptTerms) {
+                    alert("กรุณายืนยันยอมรับเงื่อนไขการจองก่อนส่งคำขอ");
+                    return;
+                }
+                
+                let finalBuildings = [...formData.building];
+                if (finalBuildings.includes('อื่นๆ')) {
+                    finalBuildings = finalBuildings.filter(b => b !== 'อื่นๆ');
+                    if (formData.otherBuilding) finalBuildings.push(formData.otherBuilding);
+                }
+                const finalBuildingStr = finalBuildings.join(', ');
+
+                onSubmit({ ...formData, building: finalBuildingStr, id: generateId(), status: 'pending', requestDate: new Date().toISOString().split('T')[0] });
+            };
+
+            return (
+                <div className="glass-card p-8 rounded-2xl shadow-sm max-w-4xl mx-auto">
+                    <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                        <span className="text-primary"><FileText size={28}/></span> ยื่นคำขอจองอาคารสถานที่
+                    </h2>
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div><label className="block text-sm font-medium text-gray-700 mb-1">ชื่อ</label><input required type="text" name="name" onChange={handleChange} className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary outline-none bg-white/80" placeholder="ระบุชื่อ..."/></div>
+                            <div><label className="block text-sm font-medium text-gray-700 mb-1">นามสกุล</label><input required type="text" name="lastName" onChange={handleChange} className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary outline-none bg-white/80" placeholder="ระบุนามสกุล..."/></div>
+                            <div><label className="block text-sm font-medium text-gray-700 mb-1">กลุ่มสาระการเรียนรู้ / ฝ่ายงาน</label><input required type="text" name="department" onChange={handleChange} className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary outline-none bg-white/80" placeholder="เช่น กลุ่มสาระฯ คณิตศาสตร์"/></div>
+                            <div><label className="block text-sm font-medium text-gray-700 mb-1">เบอร์โทรศัพท์</label><input required type="tel" name="phone" onChange={handleChange} className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary outline-none bg-white/80" placeholder="08xxxxxxxx"/></div>
+                            <div className="md:col-span-2"><label className="block text-sm font-medium text-gray-700 mb-1">อีเมล (สำหรับรับแจ้งเตือนผลการจอง) <span className="text-red-500">*</span></label><input required type="email" name="email" onChange={handleChange} className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary outline-none bg-white/80" placeholder="ตัวอย่างเช่น example@gmail.com"/></div>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">เลือกอาคารสถานที่ (เลือกได้มากกว่า 1 แห่ง) <span className="text-red-500">*</span></label>
+                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                                {buildingsList.map(b => (
+                                    <label key={b.name} className={`p-4 border rounded-xl cursor-pointer transition-all flex flex-col justify-center items-center gap-1 ${formData.building.includes(b.name) ? 'bg-light border-primary ring-1 ring-primary shadow-sm' : 'bg-white/70 hover:bg-gray-50'}`}>
+                                        <input type="checkbox" value={b.name} onChange={handleBuildingToggle} checked={formData.building.includes(b.name)} className="hidden"/>
+                                        <span className={`block text-center font-medium text-sm ${formData.building.includes(b.name) ? 'text-dark' : 'text-gray-600'}`}>{b.name}</span>
+                                        <span className="text-xs text-gray-400">({b.capacity})</span>
+                                        {formData.building.includes(b.name) && <span className="text-primary mt-1"><CheckCircle size={16}/></span>}
+                                    </label>
+                                ))}
+                            </div>
+                            {formData.building.includes('อื่นๆ') && (
+                                <div className="mt-3"><input required type="text" name="otherBuilding" onChange={handleChange} className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary outline-none bg-white/80" placeholder="โปรดระบุสถานที่ที่ต้องการเพิ่มเติม..."/></div>
+                            )}
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div><label className="block text-sm font-medium text-gray-700 mb-1">วัตถุประสงค์ <span className="text-red-500">*</span></label><textarea required name="purpose" onChange={handleChange} rows="2" className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary outline-none bg-white/80" placeholder="ระบุวัตถุประสงค์การใช้งาน..."></textarea></div>
+                            <div><label className="block text-sm font-medium text-gray-700 mb-1">จำนวนผู้เข้าร่วม (คน) <span className="text-red-500">*</span></label><input required type="number" name="participants" onChange={handleChange} className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary outline-none bg-white/80" placeholder="100"/></div>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div><label className="block text-sm font-medium text-gray-700 mb-1">วันที่ต้องการใช้ <span className="text-red-500">*</span></label><input required type="date" name="date" onChange={handleChange} className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary outline-none bg-white/80"/></div>
+                            <div><label className="block text-sm font-medium text-gray-700 mb-1">เวลาเริ่ม (24 ชม.) <span className="text-red-500">*</span></label><input required type="time" name="startTime" onChange={handleChange} className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary outline-none bg-white/80"/></div>
+                            <div><label className="block text-sm font-medium text-gray-700 mb-1">เวลาสิ้นสุด (24 ชม.) <span className="text-red-500">*</span></label><input required type="time" name="endTime" onChange={handleChange} className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary outline-none bg-white/80"/></div>
+                        </div>
+                        
+                        <div className="p-5 bg-white/60 rounded-2xl border border-gray-100 shadow-sm space-y-6">
+                            <div>
+                                <label className="block text-sm font-bold text-gray-800 mb-2">อุปกรณ์ที่ต้องการ <span className="text-red-500">*</span></label>
+                                <textarea required name="equipmentDetails" onChange={handleChange} rows="2" className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary outline-none bg-white/80" placeholder="ระบุอุปกรณ์ที่ต้องการ หากไม่มีให้พิมพ์ว่า 'ไม่มี'"></textarea>
+                            </div>
+                            
+                            <div className="border-t border-gray-200 pt-4">
+                                <label className="block text-sm font-bold text-gray-800 mb-3">รูปแบบการจัดอาคารสถานที่</label>
+                                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 mb-3">
+                                    <label className="flex items-center gap-2 text-gray-700 cursor-pointer"><input type="radio" name="setupType" value="self" onChange={handleChange} defaultChecked className="w-5 h-5 text-primary"/> จัดเอง</label>
+                                    <label className="flex items-center gap-2 text-gray-700 cursor-pointer"><input type="radio" name="setupType" value="admin" onChange={handleChange} className="w-5 h-5 text-primary"/> ต้องการให้ฝ่ายบริหารทั่วไปจัดให้</label>
+                                </div>
+                                {formData.setupType === 'admin' && (
+                                    <div className="mt-3 animate-fade-in">
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">โปรดแนบแผนผังการจัดสถานที่ <span className="text-red-500">*</span></label>
+                                        <p className="text-xs text-blue-600 mb-2 bg-blue-50 p-2 rounded-lg inline-block">💡 อัปโหลดรูปผังใน Google Drive (เปิดแชร์สาธารณะ) แล้วนำลิงก์มาวาง</p>
+                                        <input required type="url" name="layoutLink" onChange={handleChange} className="w-full p-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary outline-none bg-white/80" placeholder="https://drive.google.com/..."/>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="bg-light p-4 rounded-xl border border-primary/20 flex items-start gap-3">
+                            <input required type="checkbox" name="acceptTerms" id="acceptTerms" onChange={handleChange} className="w-5 h-5 mt-0.5 text-primary rounded"/>
+                            <label htmlFor="acceptTerms" className="text-sm text-gray-700 cursor-pointer select-none">
+                                <span className="font-bold text-dark block mb-1">ยืนยันการรับทราบเงื่อนไข <span className="text-red-500">*</span></span>
+                                ข้าพเจ้าตรวจสอบวันและเวลาแล้ว และยอมรับเงื่อนไขการจอง การยกเลิก และการคืนสถานที่ตามระเบียบของโรงเรียน
+                            </label>
+                        </div>
+
+                        <div className="flex justify-end pt-4 border-t">
+                            <button type="submit" className="bg-primary hover:bg-dark text-white px-8 py-3.5 rounded-xl font-bold transition-all shadow-md hover:shadow-lg flex items-center gap-2 transform hover:-translate-y-0.5">
+                                <CheckCircle size={20}/> ยืนยันการส่งคำขอจอง
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            );
+        };
+
+        const ConfirmDeleteDialog = ({ booking, onConfirm, onCancel, deleting }) => (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={!deleting ? onCancel : undefined}/>
+                <div className="relative bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full z-10 border border-red-100">
+                    <div className="flex flex-col items-center text-center gap-4">
+                        <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center">
+                            <AlertTriangle size={34} color="#dc2626"/>
+                        </div>
+                        <h3 className="text-xl font-bold text-gray-800">ยืนยันการลบคำขอ</h3>
+                        <div className="text-sm text-gray-500 leading-relaxed space-y-1">
+                            <p>ผู้ขอ: <span className="font-semibold text-gray-700">{booking.name} {booking.lastName}</span></p>
+                            <p>อาคาร: <span className="font-semibold text-primary">{booking.building}</span></p>
+                            <p>วันที่: <span className="font-semibold">{thaiDate(booking.date)}</span></p>
+                            <p className="text-red-500 font-medium pt-1">การดำเนินการนี้ไม่สามารถย้อนกลับได้</p>
+                        </div>
+                        <div className="flex gap-3 w-full pt-2">
+                            <button onClick={onCancel} disabled={deleting} className="flex-1 py-3 rounded-xl border border-gray-200 text-gray-700 font-medium hover:bg-gray-50 transition disabled:opacity-50">ยกเลิก</button>
+                            <button onClick={onConfirm} disabled={deleting} className="flex-1 py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white font-medium transition shadow-md flex items-center justify-center gap-2 disabled:opacity-70">
+                                {deleting ? <><Loader size={16}/> กำลังลบ...</> : <><Trash2 size={16}/> ลบคำขอ</>}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+
+        const SyncToast = ({ status }) => {
+            if (!status) return null;
+            const cfg = {
+                syncing: { bg:'bg-blue-50 border-blue-200 text-blue-700',   icon: <Loader size={14}/>,        msg: 'กำลังบันทึกลง Google Sheets...' },
+                ok:      { bg:'bg-green-50 border-green-200 text-green-700', icon: <CheckCircle size={14}/>,   msg: 'บันทึกลง Google Sheets สำเร็จ' },
+                no_url:  { bg:'bg-yellow-50 border-yellow-200 text-yellow-700', icon: <AlertTriangle size={14}/>, msg: 'ไม่ได้ตั้งค่า Apps Script URL (บันทึกเฉพาะเครื่องนี้)' },
+                error:   { bg:'bg-red-50 border-red-200 text-red-700',        icon: <AlertTriangle size={14}/>, msg: 'เชื่อมต่อ Google Sheets ไม่ได้ (บันทึกเฉพาะเครื่องนี้)' },
+            };
+            const c = cfg[status] || cfg.error;
+            return (
+                <div className={`fixed bottom-5 right-5 z-40 flex items-center gap-2 px-4 py-3 rounded-xl border shadow-lg text-sm font-medium ${c.bg} transition-all`}>
+                    {c.icon} {c.msg}
+                </div>
+            );
+        };
+
+        // ⚠️ วาง URL ของ Apps Script (Web App) ที่เพิ่ง Deploy ได้มาลงในเครื่องหมายคำพูดด้านล่างนี้
+        const GAS_URL  = 'https://script.google.com/macros/s/AKfycbwpNwgxDd-COBxw2OTXonZkZ_f7VGMHV-pZwF3APbGei8WKMBVhFrGJ9IvNk2r0YGPi/exec'; 
+
+        const syncToSheet = async (payload) => {
+            if (!GAS_URL && window.location.hostname !== 'script.google.com') return { ok: false, reason: 'no_url' };
+            try {
+                const fetchUrl = GAS_URL || window.location.href;
+                const res = await fetch(fetchUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) });
+                const json = await res.json();
+                return { ok: json.ok !== false, ...json };
+            } catch (e) {
+                return { ok: false, reason: e.message };
+            }
+        };
+
+        const loadFromSheet = async () => {
+            if (!GAS_URL && window.location.hostname !== 'script.google.com') return null;
+            try {
+                const fetchUrl = GAS_URL || window.location.href;
+                const res  = await fetch(fetchUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ action: 'getAll' }) });
+                const json = await res.json();
+                return json.ok ? json.bookings : null;
+            } catch (e) {
+                return null;
+            }
+        };
+
+        const exportStatsToWord = (bookings) => {
+            const statsMap = {};
+            bookings.forEach(b => {
+                // แยกร้านชื่อสถานที่ในกรณีที่ผู้ใช้เลือกมาหลายแห่ง
+                const buildings = b.building.split(',').map(s => s.trim()).filter(s => s);
+                buildings.forEach(bName => {
+                    if (!statsMap[bName]) statsMap[bName] = { name: bName, total: 0, approved: 0, pending: 0, rejected: 0 };
+                    statsMap[bName].total += 1;
+                    statsMap[bName][b.status] += 1;
+                });
+            });
+            // เรียงลำดับจากสถานที่ที่ถูกขอใช้มากที่สุด
+            const stats = Object.values(statsMap).sort((a, b) => b.total - a.total);
+
+            let tableRows = stats.map(s => `
+                <tr>
+                    <td style="border: 1px solid #000; padding: 8px;">${s.name}</td>
+                    <td style="border: 1px solid #000; padding: 8px; text-align: center;">${s.total}</td>
+                    <td style="border: 1px solid #000; padding: 8px; text-align: center;">${s.approved}</td>
+                    <td style="border: 1px solid #000; padding: 8px; text-align: center;">${s.pending}</td>
+                    <td style="border: 1px solid #000; padding: 8px; text-align: center;">${s.rejected}</td>
+                </tr>
+            `).join('');
+
+            // สร้างโครงสร้างเอกสาร Word ด้วย HTML
+            const html = `
+                <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+                <head>
+                    <meta charset="utf-8">
+                    <style>
+                        body { font-family: 'TH Sarabun PSK', sans-serif; font-size: 16pt; }
+                        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+                        th { background-color: #f2f2f2; border: 1px solid #000; padding: 8px; font-weight: bold; }
+                    </style>
+                </head>
+                <body>
+                    <h1 style="text-align: center; font-size: 20pt; font-weight: bold;">สถิติการใช้งานอาคารสถานที่</h1>
+                    <p style="text-align: center; font-size: 16pt; margin-top: -10px;">โรงเรียนแม่จันวิทยาคม</p>
+                    <p style="font-size: 16pt;">ข้อมูล ณ วันที่: ${new Date().toLocaleDateString('th-TH')}</p>
+                    <p style="font-size: 16pt;">จำนวนคำขอทั้งหมดในระบบ: ${bookings.length} รายการ</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>สถานที่ / อาคาร</th>
+                                <th>จำนวนคำขอ (ครั้ง)</th>
+                                <th>อนุมัติแล้ว</th>
+                                <th>รอพิจารณา</th>
+                                <th>ไม่อนุมัติ/ยกเลิก</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${tableRows || '<tr><td colspan="5" style="border: 1px solid #000; padding: 8px; text-align: center;">ไม่มีข้อมูล</td></tr>'}
+                        </tbody>
+                    </table>
+                </body>
+                </html>
+            `;
+
+            // สร้างไฟล์ Blob (.doc) และดาวน์โหลด
+            const blob = new Blob(['\ufeff', html], { type: 'application/msword' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'สถิติการใช้งานอาคารสถานที่.doc';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        };
+
+        const App = () => {
+            const [currentView, setCurrentView]     = useState('dashboard');
+            const [bookings, setBookings]           = useState(initialBookings);
+            const [selectedBooking, setSelectedBooking] = useState(null);
+            const [sidebarOpen, setSidebarOpen]     = useState(false);
+            const [deleteTarget, setDeleteTarget]   = useState(null);
+            const [deleting, setDeleting]           = useState(false);
+            const [syncStatus, setSyncStatus]       = useState(null);
+            const [loadingSheet, setLoadingSheet]   = useState(false);
+            const [showManual, setShowManual]       = useState(false);
+            const [showEmailNotice, setShowEmailNotice] = useState(false); // เพิ่ม State สำหรับเปิด/ปิดป๊อปอัปอีเมล
+            
+            // State สำหรับหน้า Admin
+            const [adminAuthenticated, setAdminAuthenticated] = useState(false);
+            const [adminPassword, setAdminPassword] = useState('');
+            const [adminError, setAdminError] = useState('');
+
+            useEffect(() => {
+                if (!GAS_URL && window.location.hostname !== 'script.google.com') return;
+                setLoadingSheet(true);
+                loadFromSheet().then(data => {
+                    if (data && data.length > 0) setBookings(data);
+                    setLoadingSheet(false);
+                });
+            }, []);
+
+            const showToast = (status) => {
+                setSyncStatus(status);
+                if (status !== 'syncing') setTimeout(() => setSyncStatus(null), 3500);
+            };
+
+            const handleBookingSubmit = async (newBooking) => {
+                setBookings(prev => [newBooking, ...prev]);
+                setSelectedBooking(newBooking);
+                setShowEmailNotice(true); // เปลี่ยนจากพาไปหน้า preview เป็นโชว์หน้าต่างแจ้งเตือนอีเมล
+                showToast('syncing');
+                const res = await syncToSheet({ action: 'add', booking: newBooking });
+                showToast(res.ok ? 'ok' : (res.reason === 'no_url' ? 'no_url' : 'error'));
+            };
+
+            // ฟังก์ชันสำหรับปิดป๊อปอัปและพาไปหน้า preview
+            const closeEmailNotice = () => {
+                setShowEmailNotice(false);
+                setCurrentView('preview');
+            };
+
+            const handleAction = async (id, action) => {
+                setBookings(prev => prev.map(b => b.id === id ? {...b, status: action} : b));
+                showToast('syncing');
+                const res = await syncToSheet({ action: 'update', id, status: action });
+                showToast(res.ok ? 'ok' : (res.reason === 'no_url' ? 'no_url' : 'error'));
+            };
+
+            const handleDelete = (id) => {
+                const target = bookings.find(b => b.id === id);
+                if(target) setDeleteTarget(target);
+            };
+
+            const handleDeleteConfirm = async () => {
+                if (!deleteTarget) return;
+                setDeleting(true);
+                showToast('syncing');
+                const res = await syncToSheet({ action: 'delete', id: deleteTarget.id });
+                setBookings(prev => prev.filter(b => b.id !== deleteTarget.id));
+                setDeleting(false);
+                setDeleteTarget(null);
+                showToast(res.ok ? 'ok' : (res.reason === 'no_url' ? 'no_url' : 'error'));
+            };
+
+            const handleAdminLoginSubmit = (e) => {
+                e.preventDefault();
+                if (adminPassword === 'mwk2569') {
+                    setAdminAuthenticated(true);
+                    setAdminError('');
+                } else {
+                    setAdminError('รหัสผ่านไม่ถูกต้อง');
+                }
+            };
+
+            const menuItems = [
+                { id: 'dashboard',   label: 'หน้าหลัก',         icon: Home },
+                { id: 'calendar',    label: 'ปฏิทินการจอง',      icon: CalendarIcon },
+                { id: 'form',        label: 'ยื่นคำขอใหม่',       icon: PenTool },
+                { id: 'my-bookings', label: 'รายการจองทั้งหมด',   icon: FileText },
+                { id: 'statistics',  label: 'สถิติการใช้งาน',     icon: BarChart2 },
+                { id: 'admin-panel', label: 'จัดการคำขอ (Admin)', icon: ShieldCheck }
+            ];
+
+            return (
+                <div className="min-h-screen flex flex-col md:flex-row text-gray-800 relative">
+                    
+                    <SyncToast status={syncStatus}/>
+
+                    {loadingSheet && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/60 backdrop-blur-sm">
+                            <div className="bg-white rounded-2xl shadow-xl p-8 flex flex-col items-center gap-4">
+                                <Loader size={40} color="#0F8B5F"/>
+                                <p className="text-gray-700 font-medium">กำลังโหลดข้อมูลจาก Google Sheets...</p>
+                            </div>
+                        </div>
+                    )}
+
+                    {deleteTarget && (
+                        <ConfirmDeleteDialog
+                            booking={deleteTarget}
+                            deleting={deleting}
+                            onConfirm={handleDeleteConfirm}
+                            onCancel={() => !deleting && setDeleteTarget(null)}
+                        />
+                    )}
+
+                    {/* ป๊อปอัปแจ้งเตือนเรื่องการส่งอีเมล */}
+                    {showEmailNotice && (
+                        <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
+                            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={closeEmailNotice}/>
+                            <div className="relative bg-white rounded-3xl shadow-2xl p-6 md:p-8 max-w-md w-full z-10 border border-green-100 text-center animate-fade-in">
+                                <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-green-50 flex items-center justify-center border-4 border-green-100">
+                                    <CheckCircle size={40} className="text-primary"/>
+                                </div>
+                                <h3 className="text-2xl font-bold text-gray-800 mb-3">ส่งคำขอจองสำเร็จ!</h3>
+                                <p className="text-gray-600 leading-relaxed mb-6 text-sm md:text-base">
+                                    ระบบได้บันทึกคำขอจองอาคารสถานที่ของท่านเรียบร้อยแล้ว<br/><br/>
+                                    <span className="text-primary font-medium block p-4 bg-light rounded-xl border border-primary/20 shadow-inner">
+                                        ระบบจะส่งสถานะการพิจารณา (อนุมัติ/ไม่อนุมัติ) ไปยังอีเมลของท่าน<br/>
+                                        <span className="text-xs md:text-sm text-red-500 mt-2 block font-bold">
+                                            * หากไม่พบในหน้ากล่องจดหมายหลัก<br/>กรุณาตรวจสอบในกล่องจดหมายขยะ (Spam)
+                                        </span>
+                                    </span>
+                                </p>
+                                <button onClick={closeEmailNotice} className="w-full bg-primary hover:bg-dark text-white py-3.5 rounded-xl font-bold transition-all shadow-md text-lg transform hover:-translate-y-0.5">
+                                    ตกลงและดูใบคำขอ
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    {showManual && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowManual(false)}/>
+                            <div className="relative bg-white rounded-2xl shadow-2xl p-6 md:p-8 max-w-lg w-full z-10 border border-gray-100">
+                                <div className="flex justify-between items-start mb-5 border-b pb-4">
+                                    <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
+                                        <div className="bg-yellow-100 p-2 rounded-lg text-yellow-600"><AlertTriangle size={24}/></div> 
+                                        คู่มือการใช้งานระบบ
+                                    </h3>
+                                    <button onClick={() => setShowManual(false)} className="text-gray-400 hover:text-red-500 transition-colors bg-gray-100 rounded-full p-1.5"><XIcon size={20}/></button>
+                                </div>
+                                <ol className="list-decimal list-inside space-y-4 text-gray-700 text-sm md:text-base leading-relaxed">
+                                    <li>ไปที่เมนู <strong>ยื่นคำขอใหม่</strong> เพื่อกรอกแบบฟอร์มขอใช้อาคารสถานที่ <br/><span className="text-primary font-medium ml-5">(สามารถติ๊กเลือกสถานที่ได้มากกว่า 1 แห่ง)</span></li>
+                                    <li>กรอกเวลาเริ่มต้นและเวลาสิ้นสุดในรูปแบบ <strong className="text-dark">24 ชั่วโมง (เช่น 08:30 หรือ 14:00)</strong></li>
+                                    <li>ตรวจสอบข้อมูลให้ครบถ้วนแล้วกด <strong>ยืนยันการส่งคำขอจอง</strong></li>
+                                    <li>รอฝ่ายบริหารทั่วไปพิจารณาอนุมัติคำขอ <br/><span className="text-gray-500 ml-5">(สถานะจะเปลี่ยนจาก "กำลังพิจารณา" เป็น "อนุมัติ" หรือ "ไม่อนุมัติ")</span></li>
+                                    <li>เมื่อได้รับการอนุมัติแล้ว ท่านสามารถเข้าไปที่เมนู <strong>รายการจองทั้งหมด</strong> แล้วกดไอคอน 🖨️ เพื่อพิมพ์เอกสาร PDF <br/><span className="text-primary font-medium ml-5">(ระบบจะลงชื่อของท่านให้อัตโนมัติ)</span></li>
+                                </ol>
+                                <button onClick={() => setShowManual(false)} className="mt-8 w-full bg-gray-100 hover:bg-gray-200 text-gray-800 py-3 rounded-xl transition font-bold text-base">ปิดหน้าต่าง</button>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Mobile Header (Hidden on Print) */}
+                    <div className="md:hidden bg-primary/90 backdrop-blur text-white p-4 flex justify-between items-center shadow-md print:hidden z-20 relative">
+                        <div className="flex items-center gap-3">
+                            <img src="https://mwk.ac.th/assets/images/logo-1.png" alt="logo" className="w-8 h-8 object-contain bg-white rounded-full p-0.5" onError={(e) => { e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }}/>
+                            <div style={{display:'none'}} className="w-8 h-8 items-center justify-center bg-white rounded-full"><Building size={16} color="#0F8B5F"/></div>
+                            <span className="font-bold text-lg">MWK Facility</span>
+                        </div>
+                        <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-1">
+                            {sidebarOpen ? <XIcon size={28}/> : <MenuIcon size={28}/>}
+                        </button>
+                    </div>
+
+                    {/* Sidebar (Hidden on Print) */}
+                    <div className={`${sidebarOpen ? 'block' : 'hidden'} md:block w-full md:w-64 sidebar-glass shadow-xl flex flex-col print:hidden absolute md:relative z-10 min-h-screen md:min-h-auto`}>
+                        <div className="p-5 border-b border-gray-100 hidden md:flex items-center gap-3">
+                            <div className="w-12 h-12 rounded-xl bg-white shadow flex items-center justify-center overflow-hidden border border-gray-100 p-1">
+                                <img src="https://mwk.ac.th/assets/images/logo-1.png" alt="logo" className="w-full h-full object-contain" onError={(e) => { e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }}/>
+                                <div style={{display:'none'}} className="w-full h-full items-center justify-center bg-primary rounded-lg"><Building size={20} color="white"/></div>
+                            </div>
+                            <div>
+                                <h2 className="font-bold text-dark leading-tight text-sm">MWK Facility</h2>
+                                <p className="text-xs text-gray-500">ระบบจองอาคารสถานที่</p>
+                            </div>
+                        </div>
+                        <div className="p-4 flex-1">
+                            <p className="text-xs font-semibold text-gray-400 mb-4 px-2 uppercase tracking-wider">เมนูหลัก</p>
+                            <nav className="space-y-1">
+                                {menuItems.map(item => (
+                                    <button key={item.id} onClick={() => { setCurrentView(item.id); setSidebarOpen(false); }}
+                                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${currentView === item.id ? 'bg-light text-primary font-semibold shadow-sm' : 'text-gray-600 hover:bg-gray-50 hover:text-primary'}`}>
+                                        <item.icon size={20}/>{item.label}
+                                    </button>
+                                ))}
+                            </nav>
+                        </div>
+                    </div>
+
+                    {/* Main Content Area */}
+                    <div className="flex-1 flex flex-col h-screen overflow-auto">
+                        <div className="flex-1 p-4 md:p-8 relative">
+
+                            {/* Dashboard */}
+                            {currentView === 'dashboard' && (
+                                <div className="space-y-6 animate-fade-in">
+                                    <div className="bg-gradient-to-r from-dark via-primary to-accent p-8 md:p-10 rounded-3xl shadow-lg text-white relative overflow-hidden flex flex-col justify-center min-h-[160px]">
+                                        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
+                                        <div className="absolute bottom-0 left-0 w-40 h-40 bg-black/10 rounded-full blur-2xl translate-y-1/3 -translate-x-1/4 pointer-events-none"></div>
+                                        <div className="relative z-10">
+                                            <h1 className="text-3xl md:text-4xl font-extrabold mb-3 drop-shadow-md">ยินดีต้อนรับสู่ระบบจองอาคารสถานที่</h1>
+                                            <p className="text-lg md:text-xl font-medium text-white/90 drop-shadow-sm flex items-center gap-2">
+                                                <Building size={24}/> โรงเรียนแม่จันวิทยาคม (MWK Facility)
+                                            </p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div 
+                                        onClick={() => setShowManual(true)}
+                                        className="glass-card rounded-2xl shadow-sm p-4 cursor-pointer hover:shadow-md hover:bg-white/90 transition-all flex items-center justify-between border-l-4 border-yellow-400"
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            <div className="bg-yellow-100 p-2.5 rounded-xl text-yellow-600"><AlertTriangle size={24}/></div>
+                                            <div>
+                                                <h3 className="text-base font-bold text-gray-800">คู่มือการใช้งานระบบ</h3>
+                                                <p className="text-xs text-gray-500">คลิกเพื่ออ่านขั้นตอนและวิธีการจองอาคารสถานที่</p>
+                                            </div>
+                                        </div>
+                                        <div className="text-primary bg-light p-2 rounded-full">
+                                            <ChevronRight size={20}/>
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                                        <DashboardCard title="คำขอทั้งหมด" count={bookings.length} icon={FileText} colorClass="bg-blue-100 text-blue-600"/>
+                                        <DashboardCard title="อนุมัติแล้ว" count={bookings.filter(b=>b.status==='approved').length} icon={CheckCircle} colorClass="bg-green-100 text-green-600"/>
+                                        <DashboardCard title="ไม่อนุมัติ / ยกเลิก" count={bookings.filter(b=>b.status==='rejected').length} icon={XCircle} colorClass="bg-red-100 text-red-600"/>
+                                        <DashboardCard title="รอพิจารณา"  count={bookings.filter(b=>b.status==='pending').length}  icon={Clock}        colorClass="bg-yellow-100 text-yellow-600"/>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Calendar View */}
+                            {currentView === 'calendar' && (
+                                <div className="animate-fade-in space-y-6">
+                                    <div>
+                                        <h1 className="text-2xl font-bold text-gray-800 mb-1">ปฏิทินการจองอาคารสถานที่</h1>
+                                        <p className="text-gray-500 text-sm">ตรวจสอบสถานะการใช้ห้องแบบภาพรวมรายเดือน</p>
+                                    </div>
+                                    <BookingCalendar bookings={bookings}/>
+                                </div>
+                            )}
+
+                            {/* Form */}
+                            {currentView === 'form' && <BookingForm onSubmit={handleBookingSubmit}/>}
+
+                            {/* My Bookings */}
+                            {currentView === 'my-bookings' && (
+                                <div className="glass-card rounded-2xl shadow-sm p-6 animate-fade-in">
+                                    <h2 className="text-2xl font-bold text-gray-800 mb-6">รายการจองทั้งหมด</h2>
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full text-sm text-left">
+                                            <thead className="bg-light/60 text-dark font-semibold border-b">
+                                                <tr>
+                                                    <th className="px-4 py-4 rounded-l-xl whitespace-nowrap">ผู้ขอ/เลขที่คำขอ</th>
+                                                    <th className="px-4 py-4 min-w-[200px]">อาคารสถานที่ / วัตถุประสงค์</th>
+                                                    <th className="px-4 py-4 whitespace-nowrap">วันที่/เวลา</th>
+                                                    <th className="px-4 py-4 text-center">สถานะ</th>
+                                                    <th className="px-4 py-4 text-center rounded-r-xl whitespace-nowrap">เอกสาร / จัดการ</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-gray-100">
+                                                {bookings.length === 0 && <tr><td colSpan="5" className="text-center py-12 text-gray-400">ยังไม่มีรายการ</td></tr>}
+                                                {bookings.map(b => (
+                                                    <tr key={b.id} className="hover:bg-white/80 transition-colors">
+                                                        <td className="px-4 py-4">
+                                                            <div className="font-bold text-gray-800">{b.name} {b.lastName}</div>
+                                                            <div className="text-gray-400 text-xs mt-1">{b.id}</div>
+                                                        </td>
+                                                        <td className="px-4 py-4">
+                                                            <div className="font-bold text-primary mb-1">{b.building}</div>
+                                                            <div className="text-gray-600 text-xs truncate max-w-[250px]" title={b.purpose}>{b.purpose}</div>
+                                                        </td>
+                                                        <td className="px-4 py-4 whitespace-nowrap">
+                                                            <div className="font-medium text-gray-800">{thaiDate(b.date)}</div>
+                                                            <div className="text-gray-500 text-xs mt-1">{b.startTime} - {b.endTime} น.</div>
+                                                        </td>
+                                                        <td className="px-4 py-4 text-center"><StatusBadge status={b.status}/></td>
+                                                        <td className="px-4 py-4">
+                                                            <div className="flex items-center justify-center gap-2">
+                                                                <button onClick={() => { setSelectedBooking(b); setCurrentView('preview'); }} className="text-primary hover:text-dark hover:bg-light p-2 rounded-lg transition-colors border border-transparent hover:border-primary/20" title="ดูแบบฟอร์ม / พิมพ์">
+                                                                    <Printer size={18}/>
+                                                                </button>
+                                                                <button onClick={() => handleDelete(b.id)} className="text-red-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-lg transition-colors border border-transparent hover:border-red-200" title="ลบ/ยกเลิกการจอง">
+                                                                    <Trash2 size={18}/>
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Admin Panel */}
+                            {currentView === 'admin-panel' && (
+                                <div className="animate-fade-in">
+                                    {!adminAuthenticated ? (
+                                        <div className="flex flex-col items-center justify-center min-h-[60vh]">
+                                            <div className="glass-card p-8 rounded-3xl shadow-lg max-w-sm w-full border border-gray-100 text-center">
+                                                <div className="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden shadow-sm border-2 border-white flex items-center justify-center bg-white p-1">
+                                                    <img src="https://mwk.ac.th/assets/images/logo-1.png" alt="logo" className="w-full h-full object-contain" onError={(e) => { e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }}/>
+                                                    <div style={{display:'none'}} className="w-full h-full items-center justify-center bg-primary rounded-full"><ShieldCheck size={32} color="white"/></div>
+                                                </div>
+                                                <h2 className="text-xl font-bold text-gray-800 mb-2">เข้าสู่ระบบจัดการ (Admin)</h2>
+                                                <p className="text-gray-500 text-sm mb-6">กรุณากรอกรหัสผ่านเพื่อเข้าใช้งาน</p>
+                                                
+                                                <form onSubmit={handleAdminLoginSubmit} className="space-y-4">
+                                                    <div>
+                                                        <div className="relative">
+                                                            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"><Lock size={18}/></div>
+                                                            <input type="password" value={adminPassword} onChange={(e) => setAdminPassword(e.target.value)} className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary outline-none bg-white/80 text-center tracking-widest" placeholder="••••••••" autoFocus/>
+                                                        </div>
+                                                        {adminError && <p className="text-red-500 text-xs mt-2 text-left pl-2">{adminError}</p>}
+                                                    </div>
+                                                    <button type="submit" className="w-full bg-primary hover:bg-dark text-white py-3 rounded-xl font-bold transition-all shadow-md flex items-center justify-center gap-2">
+                                                        ปลดล็อคเข้าใช้งาน
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-5">
+                                            <div>
+                                                <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                                                    <span className="text-primary"><ShieldCheck size={26}/></span> ระบบจัดการคำขอ (Admin)
+                                                </h2>
+                                                <p className="text-sm text-gray-500 mt-0.5">พิจารณาอนุมัติ/ปฏิเสธ คำขอจองสถานที่</p>
+                                            </div>
+
+                                            <div className="glass-card rounded-2xl shadow-sm p-6">
+                                                <div className="overflow-x-auto">
+                                                    <table className="w-full text-sm text-left">
+                                                        <thead className="bg-light/60 text-dark font-semibold border-b">
+                                                            <tr>
+                                                                <th className="px-4 py-4 rounded-l-xl whitespace-nowrap">ข้อมูลผู้ขอ</th>
+                                                                <th className="px-4 py-4 min-w-[200px]">รายละเอียดการจอง</th>
+                                                                <th className="px-4 py-4 text-center">สถานะ</th>
+                                                                <th className="px-4 py-4 text-center rounded-r-xl whitespace-nowrap">การจัดการ</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody className="divide-y divide-gray-100">
+                                                            {bookings.length === 0 && (
+                                                                <tr><td colSpan={4} className="text-center text-gray-400 py-12">ไม่มีรายการคำขอ</td></tr>
+                                                            )}
+                                                            {bookings.map(b => (
+                                                                <tr key={b.id} className="hover:bg-white/80 transition-colors">
+                                                                    <td className="px-4 py-4">
+                                                                        <div className="font-bold text-gray-800">{b.name} {b.lastName}</div>
+                                                                        <div className="text-gray-500 text-xs mt-1">แผนก: {b.department} <br/>โทร: {b.phone} <br/>อีเมล: {b.email || '-'}</div>
+                                                                    </td>
+                                                                    <td className="px-4 py-4">
+                                                                        <div className="font-bold text-primary mb-1">{b.building}</div>
+                                                                        <div className="text-gray-800 font-medium text-xs mb-1">{thaiDate(b.date)} | {b.startTime}–{b.endTime} น.</div>
+                                                                        <div className="text-gray-500 text-xs truncate max-w-[250px]" title={b.purpose}>เรื่อง: {b.purpose}</div>
+                                                                    </td>
+                                                                    <td className="px-4 py-4 text-center"><StatusBadge status={b.status}/></td>
+                                                                    <td className="px-4 py-4">
+                                                                        <div className="flex items-center justify-center gap-2">
+                                                                            <button onClick={() => { setSelectedBooking(b); setCurrentView('preview'); }} className="p-2 text-gray-600 hover:text-primary hover:bg-light rounded-lg transition border border-transparent hover:border-primary/20" title="ดูข้อมูลใบจอง"><FileText size={18}/></button>
+                                                                            {b.status === 'pending' && (
+                                                                                <>
+                                                                                    <button onClick={() => handleAction(b.id, 'approved')} className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition border border-transparent hover:border-green-200" title="อนุมัติ"><CheckCircle size={18}/></button>
+                                                                                    <button onClick={() => handleAction(b.id, 'rejected')} className="p-2 text-orange-500 hover:bg-orange-50 rounded-lg transition border border-transparent hover:border-orange-200" title="ปฏิเสธ"><XCircle size={18}/></button>
+                                                                                </>
+                                                                            )}
+                                                                            <button onClick={() => handleDelete(b.id)} className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition border border-transparent hover:border-red-200" title="ลบคำขอทิ้ง"><Trash2 size={18}/></button>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            ))}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {/* Statistics View */}
+                            {currentView === 'statistics' && (() => {
+                                const statsMap = {};
+                                bookings.forEach(b => {
+                                    const buildings = b.building.split(',').map(s => s.trim()).filter(s => s);
+                                    buildings.forEach(bName => {
+                                        if (!statsMap[bName]) statsMap[bName] = { name: bName, total: 0, approved: 0, pending: 0, rejected: 0 };
+                                        statsMap[bName].total += 1;
+                                        statsMap[bName][b.status] += 1;
+                                    });
+                                });
+                                const stats = Object.values(statsMap).sort((a, b) => b.total - a.total);
+
+                                return (
+                                    <div className="animate-fade-in space-y-6">
+                                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                            <div>
+                                                <h1 className="text-2xl font-bold text-gray-800 mb-1">สถิติการใช้งานอาคารสถานที่</h1>
+                                                <p className="text-gray-500 text-sm">ข้อมูลสรุปจำนวนคำขอและการอนุมัติของแต่ละสถานที่</p>
+                                            </div>
+                                            <button onClick={() => exportStatsToWord(bookings)} className="flex items-center justify-center gap-2 bg-blue-600 text-white px-5 py-2.5 rounded-xl hover:bg-blue-700 shadow-md font-medium transition-colors">
+                                                <Download size={20} /> ดาวน์โหลดรายงาน (Word)
+                                            </button>
+                                        </div>
+
+                                        <div className="glass-card rounded-2xl shadow-sm p-6">
+                                            <div className="overflow-x-auto">
+                                                <table className="w-full text-sm text-left">
+                                                    <thead className="bg-light/60 text-dark font-semibold border-b">
+                                                        <tr>
+                                                            <th className="px-4 py-4 rounded-l-xl">สถานที่ / อาคาร</th>
+                                                            <th className="px-4 py-4 text-center">จำนวนคำขอทั้งหมด (ครั้ง)</th>
+                                                            <th className="px-4 py-4 text-center text-emerald-600">อนุมัติแล้ว</th>
+                                                            <th className="px-4 py-4 text-center text-amber-600">รอพิจารณา</th>
+                                                            <th className="px-4 py-4 text-center text-red-500 rounded-r-xl">ไม่อนุมัติ/ยกเลิก</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody className="divide-y divide-gray-100">
+                                                        {stats.length === 0 && <tr><td colSpan="5" className="text-center py-12 text-gray-400">ยังไม่มีข้อมูลสถิติการจอง</td></tr>}
+                                                        {stats.map((s, idx) => (
+                                                            <tr key={idx} className="hover:bg-white/80 transition-colors">
+                                                                <td className="px-4 py-4 font-bold text-gray-800">{s.name}</td>
+                                                                <td className="px-4 py-4 text-center font-bold text-gray-600 text-base">{s.total}</td>
+                                                                <td className="px-4 py-4 text-center"><span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-medium">{s.approved}</span></td>
+                                                                <td className="px-4 py-4 text-center"><span className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full font-medium">{s.pending}</span></td>
+                                                                <td className="px-4 py-4 text-center"><span className="bg-red-100 text-red-600 px-3 py-1 rounded-full font-medium">{s.rejected}</span></td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })()}
+
+                            {/* Preview Screen */}
+                            {currentView === 'preview' && selectedBooking && (
+                                <div className="animate-fade-in pb-10">
+                                    <PreviewScreen booking={selectedBooking} onBack={() => setCurrentView(adminAuthenticated ? 'admin-panel' : 'my-bookings')}/>
+                                </div>
+                            )}
+
+                        </div>
+
+                        {/* Footer (Hidden on Print) */}
+                        <footer className="mt-auto py-6 border-t border-gray-200/50 text-center text-xs md:text-sm text-gray-500 print:hidden shrink-0">
+                            จัดทำระบบโดยฝ่ายบริหารทั่วไป โรงเรียนแม่จันวิทยาคม สพม.เชียงราย
+                        </footer>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<ErrorBoundary><App/></ErrorBoundary>);
+    </script>
+    <style>
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</body>
+</html>
